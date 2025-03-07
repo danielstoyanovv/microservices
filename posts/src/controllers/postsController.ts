@@ -33,7 +33,6 @@ export const createPost = async ( req: Request,  res: Response) => {
             message: ""
         })
     } catch (error) {
-        console.log(error)
         logger.error(error)
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({
             status: MESSEGE_ERROR,
@@ -46,13 +45,12 @@ export const createPost = async ( req: Request,  res: Response) => {
 export const posts = async ( req: Request,  res: Response) => {
     try {
         const posts = await redisClient.hGetAll("posts")
-        return res.status(STATUS_CREATED).json({
+        return res.status(STATUS_OK).json({
             status: MESSEGE_SUCCESS,
             data: posts,
             message: ""
         })
     } catch (error) {
-        console.log(error)
         logger.error(error)
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({
             status: MESSEGE_ERROR,
