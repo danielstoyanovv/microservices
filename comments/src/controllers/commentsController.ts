@@ -10,24 +10,34 @@ import {
     STATUS_INTERNAL_SERVER_ERROR,
     MESSEGE_ERROR,
     MESSEGE_SUCCESS,
-    MESSEGE_INTERNAL_SERVER_ERROR
+    MESSEGE_INTERNAL_SERVER_ERROR,
+    STATUS_UNPROCESSABLE_ENTITY
 } from "../constants/data"
-import {RedisService} from "../services/RedisService";
 import {LoggerService} from "../services/LoggerService";
+import database from "../config/database";
 
-const redisClient = new RedisService().createClient
 const logger = new LoggerService().createLogger()
 
-export const createPost = async ( req: Request,  res: Response) => {
+export const createComment = async ( req: Request,  res: Response) => {
     try {
-        const { title } = req.body
-        const id = Math.floor(Math.random() * 10000)
-        await redisClient.hSet("posts", id, title);
+        const { content } = req.body
+        if (content.length > 100) {
+            return res.status(STATUS_UNPROCESSABLE_ENTITY).json({
+                status: MESSEGE_ERROR,
+                data: [],
+                message: "Comment is too high"
+            })
+        }
+        const postId = req.params.id
+        const commentId = Math.floor(Math.random() * 10000)
+        console.log(commentId)
+        await database.query('INSERT INTO comments(id, post_id, content) VALUES ($1, $2, $3)', [commentId, postId, content])
         return res.status(STATUS_CREATED).json({
             status: MESSEGE_SUCCESS,
             data: [
-                id,
-                title
+                commentId,
+                postId,
+                content
             ],
             message: ""
         })
@@ -41,12 +51,12 @@ export const createPost = async ( req: Request,  res: Response) => {
     }
 }
 
-export const posts = async ( req: Request,  res: Response) => {
+export const comments = async ( req: Request,  res: Response) => {
     try {
-        const posts = await redisClient.hGetAll("posts")
+        const comments = await database.query('SELECT post_id, content from comments where post_id=' + req.params.id)
         return res.status(STATUS_OK).json({
             status: MESSEGE_SUCCESS,
-            data: posts,
+            data: comments.rows,
             message: ""
         })
     } catch (error) {
