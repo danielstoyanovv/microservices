@@ -25,10 +25,10 @@ export const createPost = async ( req: Request,  res: Response) => {
         await redisClient.hSet("posts", id, title);
         return res.status(STATUS_CREATED).json({
             status: MESSEGE_SUCCESS,
-            data: [
-                id,
-                title
-            ],
+            data: {
+                id: id,
+                title: title
+            },
             message: ""
         })
     } catch (error) {
