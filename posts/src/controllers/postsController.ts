@@ -10,7 +10,8 @@ import {
     STATUS_INTERNAL_SERVER_ERROR,
     MESSEGE_ERROR,
     MESSEGE_SUCCESS,
-    MESSEGE_INTERNAL_SERVER_ERROR
+    MESSEGE_INTERNAL_SERVER_ERROR,
+    STATUS_UNPROCESSABLE_ENTITY
 } from "../constants/data"
 import {RedisService} from "../services/RedisService";
 import {LoggerService} from "../services/LoggerService";
@@ -21,6 +22,13 @@ const logger = new LoggerService().createLogger()
 export const createPost = async ( req: Request,  res: Response) => {
     try {
         const { title } = req.body
+        if (title.length > 50) {
+            return res.status(STATUS_UNPROCESSABLE_ENTITY).json({
+                status: MESSEGE_ERROR,
+                data: [],
+                message: "title is too high"
+            })
+        }
         const id = Math.floor(Math.random() * 10000)
         await redisClient.hSet("posts", id, title);
         return res.status(STATUS_CREATED).json({
