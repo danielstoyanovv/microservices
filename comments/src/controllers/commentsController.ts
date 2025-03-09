@@ -30,8 +30,9 @@ export const createComment = async ( req: Request,  res: Response) => {
         }
         const postId = req.params.id
         const commentId = Math.floor(Math.random() * 10000)
-        console.log(commentId)
-        await database.query('INSERT INTO comments(id, post_id, content) VALUES ($1, $2, $3)', [commentId, postId, content])
+        const createdAt = new Date()
+        await database.query('INSERT INTO comments(id, post_id, content, created_at) VALUES ($1, $2, $3, $4)'
+            , [commentId, postId, content, createdAt])
         return res.status(STATUS_CREATED).json({
             status: MESSEGE_SUCCESS,
             data: [
