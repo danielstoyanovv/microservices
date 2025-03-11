@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import CommentsCreate from "./CommentsCreate";
 
 export default () => {
     const [posts, setPosts] = useState([])
@@ -14,7 +15,6 @@ export default () => {
         const json = response.json()
         if (response.ok) {
             json.then(result => {
-                // console.log(result.data)
                 setPosts(result.data)
                 const posts = []
                 Object.keys(result.data).map(postKeys => {
@@ -44,6 +44,7 @@ export default () => {
                     className="card-body"
                 >
                     <h3>{post.title}</h3>
+                    <CommentsCreate postId={post.id} />
                 </div>
 
             </div>

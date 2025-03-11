@@ -22,7 +22,7 @@ describe("Comments microservice integration tests",  function() {
                     content: "My new comment"
                 }
                 // Step 2 - Create the new comment using the new created post id in the url
-                const commentsUrl = "http://localhost:4001/posts/" + result.data.id + "/comments"
+                const commentsUrl = `http://localhost:4001/posts/${result.data.id}/comments`
                 const responseComment = await fetch(commentsUrl, {
                     method: "POST",
                     body: JSON.stringify(comment),
