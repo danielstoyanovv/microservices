@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import CommentsCreate from "./CommentsCreate";
+import CommentCreate from "./CommentCreate";
+import CommentList from "./CommentList";
 
 export default () => {
     const [posts, setPosts] = useState([])
@@ -44,7 +45,8 @@ export default () => {
                     className="card-body"
                 >
                     <h3>{post.title}</h3>
-                    <CommentsCreate postId={post.id} />
+                    <CommentList postId={post.id} />
+                    <CommentCreate postId={post.id} />
                 </div>
 
             </div>

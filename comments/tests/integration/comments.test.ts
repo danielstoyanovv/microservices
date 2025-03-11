@@ -58,7 +58,7 @@ describe("Comments microservice integration tests",  function() {
                     content: "My new comment"
                 }
                 // Step 2 - use the new created post to get it's comments
-                const commentsUrl = "http://localhost:4001/posts/" + result.data.id + "/comments"
+                const commentsUrl = `http://localhost:4001/posts/${result.data.id}/comments`
                 const responseComment = await fetch(commentsUrl, {
                     method: "GET"
                 })
