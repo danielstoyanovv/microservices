@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 export default () => {
     const [title, setTitle] = useState("")
