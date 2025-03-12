@@ -8,6 +8,10 @@ import helmet from "helmet";
 require('dotenv').config();
 import database from "./config/database";
 import {LoggerService} from "./services/LoggerService";
+import {
+    Request,
+    Response
+} from "express"
 
 const logger = new LoggerService().createLogger()
 database.on("connect", (client: any) => {
@@ -29,6 +33,12 @@ const port = process.env.COMMENTS_MICROSERVICE_PORT ||  4001
 
 app.get("/posts/:id/comments", comments)
 app.post("/posts/:id/comments", createComment)
+
+app.post("/events", (req: Request, res: Response) => {
+    console.log("Received event ", req.body.type)
+
+    res.send({})
+})
 app.listen(port, () => {
     console.log("listening on port", port)
 })

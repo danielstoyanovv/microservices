@@ -1,11 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 import helmet from "helmet";
-require('dotenv').config();
-import {
-    posts,
-    createPost,
-} from "./controllers/postsController";
+require('dotenv').config()
 import {
     Request,
     Response
@@ -19,16 +15,14 @@ app.use(cors())
 
 app.use(helmet())
 
-const port = process.env.POSTS_MICROSERVICE_PORT || 4000
+const port = process.env.QUERY_MICROSERVICE_PORT || 4002
 
-app.get("/posts", posts)
+app.post("/posts", (req: Request, res: Response) => {
 
-app.post("/posts", createPost)
+})
 
 app.post("/events", (req: Request, res: Response) => {
-    console.log("Received event ", req.body.type)
 
-    res.send({})
 })
 
 app.listen(port, () => {
