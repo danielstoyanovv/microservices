@@ -52,8 +52,6 @@ app.post("/events", async (req: Request, res: Response) => {
                 .query('SELECT id, title, comments FROM posts_comments_data WHERE id= ($1) '
                 , [postId])
             const comment = "{content: " + content + ", comment_id: " + id + ", post_id: " + postId + "}"
-            console.log(comment)
-
             const postsCommentsData = checkIfPostExistsInDatabase.rows
             if (checkIfPostExistsInDatabase.rowCount == 1) {
                 postsCommentsData.map(async (value: any) => {
