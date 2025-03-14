@@ -13,12 +13,13 @@ import {
     MESSEGE_INTERNAL_SERVER_ERROR,
     STATUS_UNPROCESSABLE_ENTITY
 } from "../constants/data"
-import {RedisService} from "../services/RedisService";
 import {LoggerService} from "../services/LoggerService";
 import axios from "axios";
+import database from "../config/database";
+import {PostManager} from "../utils/PostManager";
 
-const redisClient = new RedisService().createClient
 const logger = new LoggerService().createLogger()
+const manager = new PostManager()
 
 export const createPost = async ( req: Request,  res: Response) => {
     try {
@@ -31,7 +32,10 @@ export const createPost = async ( req: Request,  res: Response) => {
             })
         }
         const id = Math.floor(Math.random() * 10000)
-        await redisClient.hSet("posts", id, title);
+        await manager
+            .setId(id)
+            .setTitle(title)
+            .createPost()
         await axios.post("http://localhost:4005/events", {
             type: "PostCreated",
             data: {
@@ -59,10 +63,11 @@ export const createPost = async ( req: Request,  res: Response) => {
 
 export const posts = async ( req: Request,  res: Response) => {
     try {
-        const posts = await redisClient.hGetAll("posts")
+        const posts = await database
+            .query('SELECT id, title FROM posts')
         return res.status(STATUS_OK).json({
             status: MESSEGE_SUCCESS,
-            data: posts,
+            data: posts.rows,
             message: ""
         })
     } catch (error) {

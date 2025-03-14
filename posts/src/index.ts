@@ -10,6 +10,20 @@ import {
     Request,
     Response
 } from "express"
+import database from "./config/database";
+import {LoggerService} from "./services/LoggerService";
+
+const logger = new LoggerService().createLogger()
+
+database.on("connect", (client: any) => {
+    console.log("Postgres database established")
+    client
+        .query('CREATE TABLE IF NOT EXISTS posts (' +
+            'id SERIAL PRIMARY KEY, ' +
+            'title VARCHAR(50), ' +
+            'created_at Date )')
+        .catch((err: any) => logger.error(err));
+});
 
 const app = express()
 
