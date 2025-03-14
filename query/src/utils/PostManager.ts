@@ -78,19 +78,54 @@ export class PostManager {
         return this.#commentId
     }
 
+    /**
+     * Create post
+     * @return {void}
+     */
     async createPost() {
         await database.query('INSERT INTO posts(id, title) VALUES ($1, $2) '
             , [this.getId(), this.getTitle()])
     }
+
+    /**
+     * Create post comment
+     * @return {void}
+     */
     async createComment() {
-        const checkIfPostExistsInDatabase = await database
-            .query('SELECT id, title, comments FROM posts WHERE id= ($1) '
-                , [this.getId()])
         const comment = "{content: " + this.getContent() + ", comment_id: " + this.getCommentId() + "" +
             ", post_id: " + this.getId() + "}"
-        const postsCommentsData = checkIfPostExistsInDatabase.rows
-        if (checkIfPostExistsInDatabase.rowCount == 1) {
-            postsCommentsData.map(async (value: any) => {
+        const postExists = this.handlePostExists(this.getId())
+        postExists.then(result => {
+            this.handlePostCreate(result, comment)
+        })
+    }
+
+
+    /**
+     * Check if post exist in database
+     * @return {boolean}
+     */
+    async handlePostExists(id: string) {
+        const postExistsDatabase = await database
+            .query('SELECT id FROM posts WHERE id= ($1) '
+                , [id])
+        if (postExistsDatabase.rowCount == 1) {
+            return true
+        }
+        return false
+    }
+
+    /**
+     * begin post create process
+     * @return {void}
+     */
+    async handlePostCreate(postExists: boolean, comment: string) {
+        if (postExists == true) {
+            const postData = await database
+                .query('SELECT id, title, comments FROM posts WHERE id= ($1) '
+                    , [this.getId()])
+            const post = postData.rows
+            post.map(async (value: any) => {
                 const currentId = value.id
                 const currentTitle = value.title
                 const currentComments = value.comments
