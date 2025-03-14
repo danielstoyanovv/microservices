@@ -17,20 +17,6 @@ export default () => {
         if (response.ok) {
             json.then(result => {
                 setPosts(result.data)
-                const posts = []
-                Object.keys(result.data).map(postKeys => {
-                    const id = postKeys
-                    Object.values(result.data).map(postValue => {
-                        const title = postValue
-                        const post = {
-                            id: id,
-                            title: title
-                        };
-                        posts.push(post)
-
-                    })
-                })
-                setPosts(posts)
             })
         }
     }
