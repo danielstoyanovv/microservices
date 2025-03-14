@@ -17,7 +17,11 @@ const logger = new LoggerService().createLogger()
 database.on("connect", (client: any) => {
     console.log("Postgres database established")
     client
-        .query('CREATE TABLE IF NOT EXISTS comments (id INT, post_id INT, content VARCHAR(100), created_at Date)')
+        .query('CREATE TABLE IF NOT EXISTS comments (' +
+            'id SERIAL PRIMARY KEY, ' +
+            'post_id INT, ' +
+            'content VARCHAR(100), ' +
+            'created_at Date)')
         .catch((err: any) => logger.error(err));
 });
 
