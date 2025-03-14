@@ -52,8 +52,4 @@ export class PostManager {
             ' VALUES ($1, $2, $3) '
             , [this.getId(), this.getTitle(), createdAt])
     }
-
-
-
-
 }
