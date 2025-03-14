@@ -29,7 +29,7 @@ export const posts = async ( req: Request,  res: Response) => {
         })
     } catch (error) {
         logger.error(error)
-        res.status(STATUS_INTERNAL_SERVER_ERROR).json({S
+        res.status(STATUS_INTERNAL_SERVER_ERROR).json({
             status: MESSEGE_ERROR,
             data: [],
             message: MESSEGE_INTERNAL_SERVER_ERROR
