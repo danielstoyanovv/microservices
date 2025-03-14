@@ -1,7 +1,6 @@
 const express = require("express")
 const cors = require("cors")
 import helmet from "helmet";
-import {Request, Response} from "express"
 import database from "./config/database";
 import {LoggerService} from "./services/LoggerService";
 import {
