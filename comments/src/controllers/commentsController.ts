@@ -16,6 +16,9 @@ import {
 import {LoggerService} from "../services/LoggerService";
 import database from "../config/database";
 import axios from "axios";
+import {CommentManager} from "../utils/CommentManager";
+
+const manager = new CommentManager()
 
 const logger = new LoggerService().createLogger()
 
@@ -31,9 +34,11 @@ export const createComment = async ( req: Request,  res: Response) => {
         }
         const postId = req.params.id
         const commentId = Math.floor(Math.random() * 10000)
-        const createdAt = new Date()
-        await database.query('INSERT INTO comments(id, post_id, content, created_at) VALUES ($1, $2, $3, $4)'
-            , [commentId, postId, content, createdAt])
+        await manager
+            .setId(commentId)
+            .setPostId(postId)
+            .setContent(content)
+            .createComment()
         await axios.post("http://localhost:4005/events", {
             type: "CommentCreated",
             data: {
