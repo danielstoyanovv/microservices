@@ -17,7 +17,8 @@ database.on("connect", (client: any) => {
         .query('CREATE TABLE IF NOT EXISTS posts (' +
             'id SERIAL PRIMARY KEY, ' +
             'title VARCHAR(50), ' +
-            'comments TEXT)')
+            'comments TEXT, ' +
+            'status VARCHAR(15))')
         .catch((err: any) => logger.error(err));
 });
 
