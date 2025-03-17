@@ -34,17 +34,20 @@ export const createComment = async ( req: Request,  res: Response) => {
         }
         const postId = req.params.id
         const commentId = Math.floor(Math.random() * 10000)
+        const status = "pending"
         await manager
             .setId(commentId)
             .setPostId(postId)
             .setContent(content)
+            .setStatus(status)
             .createComment()
         await axios.post("http://localhost:4005/events", {
             type: "CommentCreated",
             data: {
                  id: commentId,
                  content,
-                 postId
+                 postId,
+                status
              }
         })
         return res.status(STATUS_CREATED).json({
@@ -57,6 +60,7 @@ export const createComment = async ( req: Request,  res: Response) => {
             message: ""
         })
     } catch (error) {
+        console.log(error)
         logger.error(error)
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({
             status: MESSEGE_ERROR,

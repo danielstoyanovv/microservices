@@ -13,9 +13,9 @@ import {
 } from "../constants/data"
 import database from "../config/database";
 import {LoggerService} from "../services/LoggerService";
-import {PostManager} from "../utils/PostManager";
+import {QueryManager} from "../utils/QueryManager";
 
-const manager = new PostManager()
+const manager = new QueryManager()
 
 const logger = new LoggerService().createLogger()
 export const posts = async ( req: Request,  res: Response) => {
@@ -48,11 +48,12 @@ export const events = async ( req: Request,  res: Response) => {
                 .createPost()
         }
         if (type === "CommentCreated") {
-            const { id, content, postId } = data
+            const { id, content, postId, status } = data
             manager
                 .setId(postId)
                 .setCommentId(id)
                 .setContent(content)
+                .setStatus(status)
                 .createComment()
         }
     } catch (error) {

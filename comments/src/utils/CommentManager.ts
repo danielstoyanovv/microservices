@@ -5,6 +5,8 @@ export class CommentManager {
     #id: number
     #postId: string
     #content: string
+    #status: string
+
     /**
      * Set id
      * @param {number} id
@@ -59,14 +61,31 @@ export class CommentManager {
     }
 
     /**
+     * Set status
+     * @return {string}
+     */
+    setStatus(status: string) {
+        this.#status = status
+        return this
+    }
+
+    /**
+     * Get status
+     * @return {string}
+     */
+    getStatus() {
+        return this.#status
+    }
+
+    /**
      * Create comment
      * @return {void}
      */
     async createComment() {
         const createdAt = new Date()
-        await database.query('INSERT INTO comments(id, post_id, content, created_at) ' +
-            'VALUES ($1, $2, $3, $4) '
-            , [this.getId(), this.getPostId(), this.getContent(), createdAt])
+        await database.query('INSERT INTO comments(id, post_id, content, status, created_at) ' +
+            'VALUES ($1, $2, $3, $4, $5) '
+            , [this.getId(), this.getPostId(), this.getContent(), this.getStatus(), createdAt])
     }
 
 }

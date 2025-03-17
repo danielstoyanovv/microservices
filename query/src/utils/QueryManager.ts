@@ -1,12 +1,12 @@
 "use strict";
 
 import database from "../config/database";
-export class PostManager {
+export class QueryManager {
     #id: string
     #title: string
     #content: string
     #commentId: string
-
+    #status: string
 
     /**
      * Set post id
@@ -79,6 +79,23 @@ export class PostManager {
     }
 
     /**
+     * Set status
+     * @return {string}
+     */
+    setStatus(status: string) {
+        this.#status = status
+        return this
+    }
+
+    /**
+     * Get status
+     * @return {string}
+     */
+    getStatus() {
+        return this.#status
+    }
+
+    /**
      * Create post
      * @return {void}
      */
@@ -129,17 +146,18 @@ export class PostManager {
                 const currentId = value.id
                 const currentTitle = value.title
                 const currentComments = value.comments
+                const currentStatus = value.status
                 const allComments = currentComments + comment
                 await database.query('DELETE FROM posts WHERE id= ($1) '
                     , [this.getId()])
-                await database.query('INSERT INTO posts(id, title, comments) ' +
-                    'VALUES ($1, $2, $3) '
-                    , [currentId, currentTitle, allComments])
+                await database.query('INSERT INTO posts(id, title, comments, status) ' +
+                    'VALUES ($1, $2, $3, $4) '
+                    , [currentId, currentTitle, allComments, currentStatus])
             })
         } else {
-            await database.query('INSERT INTO posts(id, comments) ' +
-                'VALUES ($1, $2) '
-                , [this.getId(), comment])
+            await database.query('INSERT INTO posts(id, comments, status) ' +
+                'VALUES ($1, $2, $3) '
+                , [this.getId(), comment, this.getStatus()])
         }
     }
 }

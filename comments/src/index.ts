@@ -21,6 +21,7 @@ database.on("connect", (client: any) => {
             'id SERIAL PRIMARY KEY, ' +
             'post_id INT, ' +
             'content VARCHAR(100), ' +
+            'status VARCHAR(15), ' +
             'created_at Date)')
         .catch((err: any) => logger.error(err));
 });
