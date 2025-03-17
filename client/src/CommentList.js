@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-export default ({ postId }) => {
-    const [comments, setComments] = useState([])
+export default ({ comments }) => {
 
-    const fetchData = async () => {
-        const commentsUrl = `http://localhost:4001/posts/${postId}/comments`
-        const responseComment = await fetch(commentsUrl, {
-            method: "GET"
+    if (comments) {
+        const commentsAsArray = []
+        const allData = comments.split("}")
+        allData.map(comment => {
+            if (comment.length > 0) {
+                const data = comment.split(":")
+                const contentData = data[1].split(",")
+                const content = contentData[0]
+                const commentData = data[2].split(",")
+                const commentId = commentData[0]
+
+                const commentResult = {
+                    id: commentId,
+                    content: content
+                }
+                commentsAsArray.push(commentResult)
+            }
         })
-        if (responseComment.ok) {
-            console.log(responseComment.status)
-            const json = responseComment.json()
-            json.then(async result => {
-                setComments(result.data)
-            })
-        }
+        const renderedComments = commentsAsArray.map(comment => {
+            return <li key={comment.id}>{comment.content}</li>
+        })
+
+        return <ul>
+            {renderedComments}
+        </ul>
     }
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    const renderedComments = comments.map(comment => {
-        return <li key={comment.id}>{comment.content}</li>
-    })
-
-    return <ul>
-        {renderedComments}
-    </ul>
 }
