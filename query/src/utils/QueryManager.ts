@@ -139,7 +139,7 @@ export class QueryManager {
     async handlePostCreate(postExists: boolean, comment: string) {
         if (postExists == true) {
             const postData = await database
-                .query('SELECT id, title, comments FROM posts WHERE id= ($1) '
+                .query('SELECT id, title, comments, status FROM posts WHERE id= ($1) '
                     , [this.getId()])
             const post = postData.rows
             post.map(async (value: any) => {
