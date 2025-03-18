@@ -42,19 +42,29 @@ export const events = async ( req: Request,  res: Response) => {
         const {type, data} = req.body
         if (type === "PostCreated") {
             const {id, title} = data
-            manager
+            await manager
                 .setId(id)
                 .setTitle(title)
                 .createPost()
         }
+
         if (type === "CommentCreated") {
             const { id, content, postId, status } = data
-            manager
+            await manager
                 .setId(postId)
                 .setCommentId(id)
                 .setContent(content)
                 .setStatus(status)
-                .createComment()
+                .createPostWithComment()
+        }
+
+        if (type === "CommentUpdated") {
+            const { id, status, postId, content } = data
+            manager.setId(postId)
+                .setCommentId(id)
+                .setContent(content)
+                .setStatus(status)
+                .updatePostStatus()
         }
     } catch (error) {
         console.log(error)

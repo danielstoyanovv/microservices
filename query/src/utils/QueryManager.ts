@@ -28,6 +28,7 @@ export class QueryManager {
 
     /**
      * Set post title
+     * @param {string} title
      * @return {string}
      */
     setTitle(title: string) {
@@ -45,6 +46,7 @@ export class QueryManager {
 
     /**
      * Set post content
+     * @param {string} content
      * @return {string}
      */
     setContent(content: string) {
@@ -80,6 +82,7 @@ export class QueryManager {
 
     /**
      * Set status
+     * @param {string} status
      * @return {string}
      */
     setStatus(status: string) {
@@ -108,18 +111,19 @@ export class QueryManager {
      * Create post comment
      * @return {void}
      */
-    async createComment() {
+    async createPostWithComment() {
         const comment = "{content: " + this.getContent() + ", comment_id: " + this.getCommentId() + "" +
             ", post_id: " + this.getId() + "}"
         const postExists = this.handlePostExists(this.getId())
         postExists.then(result => {
-            this.handlePostCreate(result, comment)
+            this.handleCreatePostWithComment(result, comment)
         })
     }
 
 
     /**
      * Check if post exist in database
+     * @param {string} id
      * @return {boolean}
      */
     async handlePostExists(id: string) {
@@ -134,9 +138,11 @@ export class QueryManager {
 
     /**
      * begin post create process
+     * @param {boolean} postExists
+     * @param {string} comment
      * @return {void}
      */
-    async handlePostCreate(postExists: boolean, comment: string) {
+    async handleCreatePostWithComment(postExists: boolean, comment: string) {
         if (postExists == true) {
             const postData = await database
                 .query('SELECT id, title, comments, status FROM posts WHERE id= ($1) '
@@ -158,6 +164,29 @@ export class QueryManager {
             await database.query('INSERT INTO posts(id, comments, status) ' +
                 'VALUES ($1, $2, $3) '
                 , [this.getId(), comment, this.getStatus()])
+        }
+    }
+
+    /**
+     * Update posts status
+     * @return {void}
+     */
+    async updatePostStatus() {
+        await this.handleUpdatePostStatus(await this.handlePostExists(this.getId()))
+    }
+
+    /**
+     * begin post status update process
+     * @param {boolean} postExists
+     * @return {void}
+     */
+    async handleUpdatePostStatus(postExists: boolean) {
+        if (postExists) {
+            database
+                .query('UPDATE posts ' +
+                    'SET status = $1 ' +
+                    'WHERE id= ($2) '
+                    , [this.getStatus(), this.getId()])
         }
     }
 }
