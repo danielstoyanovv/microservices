@@ -114,10 +114,7 @@ export class QueryManager {
     async createPostWithComment() {
         const comment = "{content: " + this.getContent() + ", comment_id: " + this.getCommentId() + "" +
             ", post_id: " + this.getId() + "}"
-        const postExists = this.handlePostExists(this.getId())
-        postExists.then(result => {
-            this.handleCreatePostWithComment(result, comment)
-        })
+            this.handleCreatePostWithComment(await this.handlePostExists(this.getId()), comment)
     }
 
 
@@ -143,7 +140,7 @@ export class QueryManager {
      * @return {void}
      */
     async handleCreatePostWithComment(postExists: boolean, comment: string) {
-        if (postExists == true) {
+        if (postExists) {
             const postData = await database
                 .query('SELECT id, title, comments, status FROM posts WHERE id= ($1) '
                     , [this.getId()])
