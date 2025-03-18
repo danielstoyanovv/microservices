@@ -25,6 +25,7 @@ export class PostManager {
 
     /**
      * Set post title
+     * @param {string} title
      * @return {string}
      */
     setTitle(title: string) {
