@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const express = require("express")
 const cors = require("cors")
 import {
@@ -39,8 +41,33 @@ const port = process.env.COMMENTS_MICROSERVICE_PORT ||  4001
 app.get("/posts/:id/comments", comments)
 app.post("/posts/:id/comments", createComment)
 
-app.post("/events", (req: Request, res: Response) => {
+app.post("/events", async (req: Request, res: Response) => {
     console.log("Received event ", req.body.type)
+
+    const {type, data} = req.body
+
+    if (type === "CommentModerated") {
+        const {id, postId, status, content} = data
+        await database
+            .query('UPDATE comments ' +
+                'SET status = $1 ' +
+                'WHERE id= ($2) '
+                , [status, id])
+            .catch((err: any) => logger.error(err));
+        const commentData = {
+            type: "CommentUpdated",
+            data: {
+                id,
+                status,
+                postId,
+                content
+            }
+        }
+        axios.post("http://localhost:4005/events", commentData).catch((err) => {
+            logger.error(err.message)
+            console.log(err.message);
+        });
+    }
 
     res.send({})
 })

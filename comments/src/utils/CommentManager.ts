@@ -27,6 +27,7 @@ export class CommentManager {
 
     /**
      * Set post content
+     * @param {string} content
      * @return {string}
      */
     setContent(content: string) {
@@ -62,6 +63,7 @@ export class CommentManager {
 
     /**
      * Set status
+     * @param {string} status
      * @return {string}
      */
     setStatus(status: string) {
