@@ -127,10 +127,7 @@ export class QueryManager {
         const postExistsDatabase = await database
             .query('SELECT id FROM posts WHERE id= ($1) '
                 , [id])
-        if (postExistsDatabase.rowCount == 1) {
-            return true
-        }
-        return false
+        return postExistsDatabase.rowCount == 1 ? true : false
     }
 
     /**
