@@ -18,7 +18,7 @@ database.on("connect", (client: any) => {
             'id SERIAL PRIMARY KEY, ' +
             'title VARCHAR(50), ' +
             'comments TEXT, ' +
-            'status VARCHAR(15))')
+            'status TEXT)')
         .catch((err: any) => logger.error(err));
 });
 

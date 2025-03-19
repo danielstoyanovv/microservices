@@ -11,23 +11,22 @@ import {
     MESSEGE_SUCCESS,
     MESSEGE_INTERNAL_SERVER_ERROR,
 } from "../constants/data"
-import database from "../config/database";
 import {LoggerService} from "../services/LoggerService";
 import {QueryManager} from "../utils/QueryManager";
 
 const manager = new QueryManager()
-
 const logger = new LoggerService().createLogger()
 export const posts = async ( req: Request,  res: Response) => {
     try {
-        const posts = await database
-            .query('SELECT id, title, comments FROM posts')
+        const posts = await manager
+            .getApprovedPosts()
         return res.status(STATUS_OK).json({
             status: MESSEGE_SUCCESS,
-            data: posts.rows,
+            data: posts,
             message: ""
         })
     } catch (error) {
+        console.log(error)
         logger.error(error)
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({
             status: MESSEGE_ERROR,

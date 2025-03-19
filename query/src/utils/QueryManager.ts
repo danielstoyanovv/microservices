@@ -183,4 +183,14 @@ export class QueryManager {
                     , [this.getStatus(), this.getId()])
         }
     }
+
+    /**
+     * Get approved posts from database
+     * @return {object} approvedData
+     */
+    async getApprovedPosts() {
+        const approvedData = await database
+            .query('SELECT title, comments, status from posts where to_tsvector(status) @@ to_tsquery(\'approved\')')
+        return approvedData.rows
+    }
 }

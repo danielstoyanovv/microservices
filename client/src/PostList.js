@@ -32,6 +32,7 @@ export default () => {
                     className="card-body"
                 >
                     <h3>{post.title}</h3>
+                    <p>{post.status}</p>
                     <CommentList comments={post.comments} />
                     <CommentCreate postId={post.id} />
                 </div>
