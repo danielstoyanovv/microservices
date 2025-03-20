@@ -15,7 +15,6 @@ import {
 } from "../constants/data"
 import {LoggerService} from "../services/LoggerService";
 import axios from "axios";
-import database from "../config/database";
 import {PostManager} from "../utils/PostManager";
 
 const logger = new LoggerService().createLogger()
@@ -63,11 +62,11 @@ export const createPost = async ( req: Request,  res: Response) => {
 
 export const posts = async ( req: Request,  res: Response) => {
     try {
-        const posts = await database
-            .query('SELECT id, title FROM posts')
+        const posts = await manager
+            .getPosts()
         return res.status(STATUS_OK).json({
             status: MESSEGE_SUCCESS,
-            data: posts.rows,
+            data: posts,
             message: ""
         })
     } catch (error) {

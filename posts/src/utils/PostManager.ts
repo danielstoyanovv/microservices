@@ -53,4 +53,14 @@ export class PostManager {
             ' VALUES ($1, $2, $3) '
             , [this.getId(), this.getTitle(), createdAt])
     }
+
+    /**
+     * get all posts from database
+     * @return {object} posts
+     */
+    async getPosts() {
+        const posts = await database
+            .query('SELECT id, title FROM posts')
+        return posts.rows
+    }
 }

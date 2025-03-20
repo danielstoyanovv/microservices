@@ -14,7 +14,6 @@ import {
     STATUS_UNPROCESSABLE_ENTITY
 } from "../constants/data"
 import {LoggerService} from "../services/LoggerService";
-import database from "../config/database";
 import axios from "axios";
 import {CommentManager} from "../utils/CommentManager";
 
@@ -72,13 +71,16 @@ export const createComment = async ( req: Request,  res: Response) => {
 
 export const comments = async ( req: Request,  res: Response) => {
     try {
-        const comments = await database.query('SELECT post_id, content from comments where post_id=' + req.params.id)
+        const comments = await manager
+            .setPostId(req.params.id)
+            .getPostComments()
         return res.status(STATUS_OK).json({
             status: MESSEGE_SUCCESS,
-            data: comments.rows,
+            data: comments,
             message: ""
         })
     } catch (error) {
+        console.log(error)
         logger.error(error)
         res.status(STATUS_INTERNAL_SERVER_ERROR).json({
             status: MESSEGE_ERROR,

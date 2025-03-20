@@ -90,4 +90,14 @@ export class CommentManager {
             , [this.getId(), this.getPostId(), this.getContent(), this.getStatus(), createdAt])
     }
 
+    /**
+     * get all comments for a specified post
+     * @return {object} comments
+     */
+    async getPostComments() {
+        const comments = await database .query('SELECT post_id, content, status from comments where post_id=$1',
+            [this.getPostId()])
+        return comments.rows
+    }
+
 }
