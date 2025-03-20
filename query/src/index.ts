@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const express = require("express")
 const cors = require("cors")
 import helmet from "helmet";
@@ -5,6 +7,7 @@ import database from "./config/database";
 import {LoggerService} from "./services/LoggerService";
 import {
     events,
+    handleEvent,
     posts,
 } from "./controllers/queryController";
 
@@ -36,6 +39,11 @@ app.get("/posts", posts)
 
 app.post("/events", events)
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log("listening on port", port)
+    const res = await axios.get("http://localhost:4005/events")
+    for (let event of res.data) {
+        console.log("Processing event: " + event.types)
+        handleEvent(event.type, event.data)
+    }
 })

@@ -39,34 +39,39 @@ export const posts = async ( req: Request,  res: Response) => {
 export const events = async ( req: Request,  res: Response) => {
     try {
         const {type, data} = req.body
-        if (type === "PostCreated") {
-            const {id, title} = data
-            await manager
-                .setId(id)
-                .setTitle(title)
-                .createPost()
-        }
-
-        if (type === "CommentCreated") {
-            const { id, content, postId, status } = data
-            await manager
-                .setId(postId)
-                .setCommentId(id)
-                .setContent(content)
-                .setStatus(status)
-                .createPostWithComment()
-        }
-
-        if (type === "CommentUpdated") {
-            const { id, status, postId, content } = data
-            manager.setId(postId)
-                .setCommentId(id)
-                .setContent(content)
-                .setStatus(status)
-                .updatePostStatus()
-        }
+        handleEvent(type, data)
+        res.send({})
     } catch (error) {
         console.log(error)
         logger.error(error)
+    }
+}
+
+export const handleEvent = (type: any, data:any) => {
+    if (type === "PostCreated") {
+        const {id, title} = data
+        manager
+            .setId(id)
+            .setTitle(title)
+            .createPost()
+    }
+
+    if (type === "CommentCreated") {
+        const {id, content, postId, status} = data
+        manager
+            .setId(postId)
+            .setCommentId(id)
+            .setContent(content)
+            .setStatus(status)
+            .createPostWithComment()
+    }
+
+    if (type === "CommentUpdated") {
+        const {id, status, postId, content} = data
+        manager.setId(postId)
+            .setCommentId(id)
+            .setContent(content)
+            .setStatus(status)
+            .updatePostStatus()
     }
 }

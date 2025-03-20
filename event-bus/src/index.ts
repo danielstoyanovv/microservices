@@ -1,5 +1,3 @@
-import * as events from "node:events";
-
 const express = require("express")
 const cors = require("cors")
 import helmet from "helmet";
@@ -19,9 +17,12 @@ app.use(cors())
 
 app.use(helmet())
 
+const events: any = []
+
 app.post("/events", (req: Request, res: Response) => {
     const event = req.body
     console.log(event)
+    events.push(event)
     axios.post("http://localhost:4000/events", event)
     axios.post("http://localhost:4001/events", event)
     axios.post("http://localhost:4002/events", event)
@@ -29,6 +30,10 @@ app.post("/events", (req: Request, res: Response) => {
 
 
     res.send({ status: "OK" })
+})
+
+app.get("/events", (req: Request, res: Response) => {
+    res.send(events)
 })
 
 app.listen(port, () => {
