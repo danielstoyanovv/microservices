@@ -41,4 +41,34 @@ export class PostRepository {
                 , [data, id])
     }
 
+    /**
+     * Find post
+     * @param id
+     * @return {object}
+     */
+    async findById(id: number) {
+        const post = await database
+            .query('SELECT id, title, comments, status FROM posts WHERE id= ($1) '
+                , [id])
+        return post.rows
+    }
+
+    /**
+     *
+     * @param id
+     * @return {boolean}
+     */
+    async existsPost(id: number) {
+        const existsPost = await database
+            .query('SELECT id FROM posts WHERE id= ($1) '
+                , [id])
+        return existsPost.rowCount == 1 ? true : false
+    }
+
+    async findByField() {
+        const approvedData = await database
+            .query('SELECT title, comments, status from posts where to_tsvector(status) @@ to_tsquery(\'approved\')')
+        return approvedData.rows
+    }
+
 }

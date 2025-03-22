@@ -1,6 +1,5 @@
 "use strict";
 
-import database from "../config/database";
 import {PostRepository} from "../repositories/PostRepository";
 
 const repository = new PostRepository()
@@ -118,7 +117,7 @@ export class QueryManager {
     async createPostWithComment() {
         const comment = "{content: " + this.getContent() + ", comment_id: " + this.getCommentId() + "" +
             ", post_id: " + this.getId() + "}"
-            this.handleCreatePostWithComment(await this.handlePostExists(this.getId()), comment)
+        this.handleCreatePostWithComment(await this.handlePostExists(this.getId()), comment)
     }
 
 
@@ -128,10 +127,7 @@ export class QueryManager {
      * @return {boolean}
      */
     async handlePostExists(id: string) {
-        const postExistsDatabase = await database
-            .query('SELECT id FROM posts WHERE id= ($1) '
-                , [id])
-        return postExistsDatabase.rowCount == 1 ? true : false
+        return await repository.existsPost(Number(this.getId()))
     }
 
     /**
@@ -142,10 +138,8 @@ export class QueryManager {
      */
     async handleCreatePostWithComment(postExists: boolean, comment: string) {
         if (postExists) {
-            const postData = await database
-                .query('SELECT id, title, comments, status FROM posts WHERE id= ($1) '
-                    , [this.getId()])
-            const post = postData.rows
+            const post = await repository
+                .findById(Number(this.getId()))
             post.map(async (value: any) => {
                 const currentId = value.id
                 const currentTitle = value.title
@@ -188,8 +182,7 @@ export class QueryManager {
      * @return {object} approvedData
      */
     async getApprovedPosts() {
-        const approvedData = await database
-            .query('SELECT title, comments, status from posts where to_tsvector(status) @@ to_tsquery(\'approved\')')
-        return approvedData.rows
+      return await repository.findByField()
+
     }
 }
