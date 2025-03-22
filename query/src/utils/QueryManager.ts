@@ -1,6 +1,10 @@
 "use strict";
 
 import database from "../config/database";
+import {PostRepository} from "../repositories/PostRepository";
+
+const repository = new PostRepository()
+
 export class QueryManager {
     #id: string
     #title: string
@@ -103,8 +107,8 @@ export class QueryManager {
      * @return {void}
      */
     async createPost() {
-        await database.query('INSERT INTO posts(id, title) VALUES ($1, $2) '
-            , [this.getId(), this.getTitle()])
+        await repository
+            .createPost(Number(this.getId()), this.getTitle(), "", "")
     }
 
     /**
@@ -148,16 +152,14 @@ export class QueryManager {
                 const currentComments = value.comments
                 const currentStatus = value.status
                 const allComments = currentComments + comment
-                await database.query('DELETE FROM posts WHERE id= ($1) '
-                    , [this.getId()])
-                await database.query('INSERT INTO posts(id, title, comments, status) ' +
-                    'VALUES ($1, $2, $3, $4) '
-                    , [currentId, currentTitle, allComments, currentStatus])
+                await repository
+                    .deletePost(Number(this.getId()))
+                await repository
+                    .createPost(Number(currentId), currentTitle, allComments, currentStatus)
             })
         } else {
-            await database.query('INSERT INTO posts(id, comments, status) ' +
-                'VALUES ($1, $2, $3) '
-                , [this.getId(), comment, this.getStatus()])
+            await repository
+                .createPost(Number(this.getId()), "", comment, this.getStatus())
         }
     }
 
@@ -176,11 +178,8 @@ export class QueryManager {
      */
     async handleUpdatePostStatus(postExists: boolean) {
         if (postExists) {
-            database
-                .query('UPDATE posts ' +
-                    'SET status = $1 ' +
-                    'WHERE id= ($2) '
-                    , [this.getStatus(), this.getId()])
+            await repository
+                .updatePost(Number(this.getId()), this.getStatus())
         }
     }
 
