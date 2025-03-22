@@ -15,9 +15,9 @@ import {
 } from "../constants/data"
 import {LoggerService} from "../services/LoggerService";
 import axios from "axios";
-import {CommentManager} from "../utils/CommentManager";
+import {CommentService} from "../services/CommentService";
 
-const manager = new CommentManager()
+const service = new CommentService()
 
 const logger = new LoggerService().createLogger()
 
@@ -34,7 +34,7 @@ export const createComment = async ( req: Request,  res: Response) => {
         const postId = req.params.id
         const commentId = Math.floor(Math.random() * 10000)
         const status = "pending"
-        await manager
+        await service
             .setId(commentId)
             .setPostId(postId)
             .setContent(content)
@@ -71,7 +71,7 @@ export const createComment = async ( req: Request,  res: Response) => {
 
 export const comments = async ( req: Request,  res: Response) => {
     try {
-        const comments = await manager
+        const comments = await service
             .setPostId(req.params.id)
             .getPostComments()
         return res.status(STATUS_OK).json({

@@ -1,7 +1,9 @@
 "use strict";
 
-import database from "../config/database";
-export class CommentManager {
+import {CommentRepository} from "../repositories/CommentRepository";
+
+const repository = new CommentRepository()
+export class CommentService {
     #id: number
     #postId: string
     #content: string
@@ -84,10 +86,8 @@ export class CommentManager {
      * @return {void}
      */
     async createComment() {
-        const createdAt = new Date()
-        await database.query('INSERT INTO comments(id, post_id, content, status, created_at) ' +
-            'VALUES ($1, $2, $3, $4, $5) '
-            , [this.getId(), this.getPostId(), this.getContent(), this.getStatus(), createdAt])
+        await repository
+            .createComment(this.getId(), this.getPostId(), this.getContent(), this.getStatus())
     }
 
     /**
@@ -95,9 +95,8 @@ export class CommentManager {
      * @return {object} comments
      */
     async getPostComments() {
-        const comments = await database .query('SELECT post_id, content, status from comments where post_id=$1',
-            [this.getPostId()])
-        return comments.rows
+        return await repository
+            .findById(this.getPostId())
     }
 
 }
