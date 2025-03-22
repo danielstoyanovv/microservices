@@ -1,7 +1,10 @@
 "use strict";
 
-import database from "../config/database";
-export class PostManager {
+import {PostRepository} from "../repositories/PostRepository";
+
+const repository = new PostRepository()
+
+export class PostService {
     #id: number
     #title: string
 
@@ -42,16 +45,12 @@ export class PostManager {
     }
 
     /**
-
-    /**
      * Create post
      * @return {void}
      */
     async createPost() {
-        const createdAt = new Date()
-        await database.query('INSERT INTO posts(id, title, created_at)' +
-            ' VALUES ($1, $2, $3) '
-            , [this.getId(), this.getTitle(), createdAt])
+        await repository
+            .createPost(this.getId(), this.getTitle())
     }
 
     /**
@@ -59,8 +58,7 @@ export class PostManager {
      * @return {object} posts
      */
     async getPosts() {
-        const posts = await database
-            .query('SELECT id, title FROM posts')
-        return posts.rows
+        return await repository
+            .findAll()
     }
 }
