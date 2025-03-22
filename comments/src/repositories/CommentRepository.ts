@@ -20,13 +20,13 @@ export class CommentRepository {
     }
 
     /**
-     * find all comments by post id
-     * @param id
+     *
+     * @param value
      * @return {object}
      */
-    async findById(id: string) {
+    async findByField(value: string) {
         const comments = await database .query('SELECT post_id, content, status from comments where post_id=$1',
-            [id])
+            [value])
         return comments.rows
     }
 }
