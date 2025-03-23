@@ -182,7 +182,7 @@ export class QueryManager {
      * @return {object} approvedData
      */
     async getApprovedPosts() {
-      return await repository.findByField()
+      return await repository.findByField("status", "approved")
 
     }
 }

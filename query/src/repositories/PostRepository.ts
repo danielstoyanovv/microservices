@@ -65,10 +65,16 @@ export class PostRepository {
         return existsPost.rowCount == 1 ? true : false
     }
 
-    async findByField() {
-        const approvedData = await database
-            .query('SELECT title, comments, status from posts where to_tsvector(status) @@ to_tsquery(\'approved\')')
-        return approvedData.rows
+    /**
+     * Find posts by specified field and value
+     * @param field
+     * @param value
+     * @return {object}
+     */
+    async findByField(field: string, value: string) {
+        const searchData = await database
+            .query("SELECT title, comments, status from posts where to_tsvector("+ field +") @@ to_tsquery('"+ value +"')")
+        return searchData.rows
     }
 
 }
