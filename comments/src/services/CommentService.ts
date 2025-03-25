@@ -96,6 +96,6 @@ export class CommentService {
      */
     async getPostComments() {
         return await repository
-            .findByField(this.getPostId())
+            .findByField("post_id", this.getPostId())
     }
 }

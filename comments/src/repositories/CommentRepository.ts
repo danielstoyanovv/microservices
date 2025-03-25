@@ -21,11 +21,12 @@ export class CommentRepository {
 
     /**
      *
+     * @param field
      * @param value
      * @return {object}
      */
-    async findByField(value: string) {
-        const comments = await database .query('SELECT post_id, content, status from comments where post_id=$1',
+    async findByField(field: string, value: string) {
+        const comments = await database .query("SELECT post_id, content, status from comments where "+ field +"=$1",
             [value])
         return comments.rows
     }
