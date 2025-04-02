@@ -1,0 +1,12 @@
+dist: focal  # Ubuntu 20.04
+sudo: required
+env:
+    global:
+        - SHA=$(git rev-parse HEAD)
+        - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
+before_install:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker build -t stoyanov1234/microservices-posts -f ./posts/Dockerfile  ./posts
+script:
+    - docker push stoyanov1234/microservices-posts
