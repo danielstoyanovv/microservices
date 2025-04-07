@@ -6,6 +6,6 @@ COPY package.json ./
 RUN npm install
 
 COPY . .
-COPY build app
+COPY build /app/build
 
 CMD ["npm", "start"]
