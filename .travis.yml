@@ -3,7 +3,9 @@ sudo: required
 
 before_install:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-    - docker build -t stoyanov1234/microservices-posts:0.0.1 -t stoyanov1234/microservices-posts:latest -f ./posts/Dockerfile  ./posts
+    - cd posts
+    - docker build -t stoyanov1234/microservices-posts:latest -t microservices/posts:0.0.1 .
+#    - docker build -t stoyanov1234/microservices-posts:0.0.1 -t stoyanov1234/microservices-posts:latest -f ./posts/Dockerfile  ./posts
 
 script:
     - docker push stoyanov1234/microservices-posts:0.0.1
