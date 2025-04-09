@@ -40,7 +40,7 @@ export const createComment = async ( req: Request,  res: Response) => {
             .setContent(content)
             .setStatus(status)
             .createComment()
-        await axios.post("http://localhost:4005/events", {
+        await axios.post("http://event-bus-srv:4005/events", {
             type: "CommentCreated",
             data: {
                  id: commentId,

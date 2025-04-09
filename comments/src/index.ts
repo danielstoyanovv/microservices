@@ -63,7 +63,7 @@ app.post("/events", async (req: Request, res: Response) => {
                 content
             }
         }
-        axios.post("http://localhost:4005/events", commentData).catch((err) => {
+        axios.post("http://event-bus-srv:4005/events", commentData).catch((err) => {
             logger.error(err.message)
             console.log(err.message);
         });
