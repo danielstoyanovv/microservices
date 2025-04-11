@@ -5,7 +5,7 @@ export default ({ postId }) => {
 
     const onSubmit = async (event) => {
         event.preventDefault()
-        const commentsUrl =  `http://localhost:4001/posts/${postId}/comments`
+        const commentsUrl =  `http://posts.com/posts/${postId}/comments`
         const comment = {
             content: content
         }

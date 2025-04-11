@@ -8,7 +8,7 @@ export default () => {
         const data = {
             title: title
         }
-        const response = await fetch("http://localhost:4000/posts", {
+        const response = await fetch("http://posts.com/posts", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
