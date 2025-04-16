@@ -37,7 +37,7 @@ const port = process.env.POSTS_MICROSERVICE_PORT || 4000
 
 app.get("/posts", posts)
 
-app.post("/posts", createPost)
+app.post("/posts/create", createPost)
 
 app.post("/events", (req: Request, res: Response) => {
     console.log("Received event ", req.body.type)
