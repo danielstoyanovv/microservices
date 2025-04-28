@@ -4,7 +4,7 @@ import {PostRepository} from "../repositories/PostRepository";
 
 const repository = new PostRepository()
 
-export class QueryManager {
+export class QueryService {
     #id: string
     #title: string
     #content: string
