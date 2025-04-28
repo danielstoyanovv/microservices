@@ -1,11 +1,8 @@
 import axios from "axios";
 
 const express = require("express")
+import "express-async-errors"
 const cors = require("cors")
-import {
-    createComment,
-    comments,
-} from "./controllers/commentsController";
 import helmet from "helmet";
 require('dotenv').config();
 import database from "./config/database";
@@ -14,19 +11,21 @@ import {
     Request,
     Response
 } from "express"
+import {DatabaseConnectionError} from "./errors/database-connection-error";
+import {errorHandlerMiddleware} from "./middlewares/error-handlerMiddleware";
+import {createCommentRouter} from "./routes/comments/create";
+import {allCommentsRouter} from "./routes/comments/all";
 
 const logger = new LoggerService().createLogger()
-database.on("connect", (client: any) => {
-    console.log("Postgres database established")
-    client
-        .query('CREATE TABLE IF NOT EXISTS comments (' +
-            'id SERIAL PRIMARY KEY, ' +
-            'post_id INT, ' +
-            'content VARCHAR(100), ' +
-            'status VARCHAR(15), ' +
-            'created_at Date)')
-        .catch((err: any) => logger.error(err));
-});
+console.log("Postgres database established")
+database
+    .query('CREATE TABLE IF NOT EXISTS comments (' +
+        'id SERIAL PRIMARY KEY, ' +
+        'post_id INT, ' +
+        'content VARCHAR(100), ' +
+        'status VARCHAR(15), ' +
+        'created_at Date)')
+    .catch((err: any) => {throw new DatabaseConnectionError(err)});
 
 const app = express()
 
@@ -38,8 +37,9 @@ app.use(helmet())
 
 const port = process.env.COMMENTS_MICROSERVICE_PORT ||  4001
 
-app.get("/posts/:id/comments", comments)
-app.post("/posts/:id/comments", createComment)
+app.use(createCommentRouter)
+app.use(allCommentsRouter)
+app.use(errorHandlerMiddleware)
 
 app.post("/events", async (req: Request, res: Response) => {
     console.log("Received event ", req.body.type)
@@ -53,7 +53,7 @@ app.post("/events", async (req: Request, res: Response) => {
                 'SET status = $1 ' +
                 'WHERE id= ($2) '
                 , [status, id])
-            .catch((err: any) => logger.error(err));
+            .catch((err: any) => logger.error(err));``
         const commentData = {
             type: "CommentUpdated",
             data: {
