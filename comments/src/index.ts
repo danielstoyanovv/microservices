@@ -53,7 +53,7 @@ app.post("/events", async (req: Request, res: Response) => {
                 'SET status = $1 ' +
                 'WHERE id= ($2) '
                 , [status, id])
-            .catch((err: any) => logger.error(err));``
+            .catch((err: any) => logger.error(err));
         const commentData = {
             type: "CommentUpdated",
             data: {
