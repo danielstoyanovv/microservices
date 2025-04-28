@@ -3,6 +3,7 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 import {LoggerService} from "./services/LoggerService";
+import {DatabaseConnectionError} from "./errors/database-connection-error";
 
 const logger = new LoggerService().createLogger()
 
@@ -21,4 +22,4 @@ const client = new Pool({
 });
 client
     .query(`CREATE DATABASE ` + DB_NAME)
-    .catch((err: any) => logger.error(err))
+    .catch((err: any) => {throw new DatabaseConnectionError(err)})
