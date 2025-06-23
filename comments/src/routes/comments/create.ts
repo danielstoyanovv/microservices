@@ -35,15 +35,15 @@ router.post("/posts/:id/comments", [
         .setContent(content)
         .setStatus(status)
         .createComment()
-    // await axios.post("http://event-bus-srv:4005/events", {
-    //     type: "CommentCreated",
-    //     data: {
-    //         id: commentId,
-    //         content,
-    //         postId,
-    //         status
-    //     }
-    // })
+    await axios.post("http://event-bus-srv:4005/events", {
+        type: "CommentCreated",
+        data: {
+            id: commentId,
+            content,
+            postId,
+            status
+        }
+    })
     return res.status(STATUS_CREATED).json({
         status: MESSEGE_SUCCESS,
         data: [
