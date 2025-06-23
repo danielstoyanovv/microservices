@@ -1,13 +1,18 @@
 "use strict";
 
-import {CommentRepository} from "../repositories/CommentRepository";
+import {CommentRepositoryInterface} from "../repositories/CommentRepositoryInterface";
+import {CommentServiceInterface} from "./CommentServiceInterface";
 
-const repository = new CommentRepository()
-export class CommentService {
-    #id: number
-    #postId: string
-    #content: string
-    #status: string
+export class CommentService implements CommentServiceInterface {
+    id: number
+    postId: string
+    content: string
+    status: string
+    interface: CommentRepositoryInterface;
+
+    constructor(repository: CommentRepositoryInterface) {
+        this.interface = repository;
+    }
 
     /**
      * Set id
@@ -15,7 +20,7 @@ export class CommentService {
      * @return {this}
      */
     setId(id: number) {
-        this.#id = id
+        this.id = id
         return this
     }
 
@@ -24,7 +29,7 @@ export class CommentService {
      * @return {number}
      */
     getId() {
-        return this.#id
+        return this.id
     }
 
     /**
@@ -33,7 +38,7 @@ export class CommentService {
      * @return {string}
      */
     setContent(content: string) {
-        this.#content = content
+        this.content = content
         return this
     }
 
@@ -42,7 +47,7 @@ export class CommentService {
      * @return {string}
      */
     getContent() {
-        return this.#content
+        return this.content
     }
 
     /**
@@ -51,7 +56,7 @@ export class CommentService {
      * @return {this}
      */
     setPostId(postId: string) {
-        this.#postId = postId
+        this.postId = postId
         return this
     }
 
@@ -60,7 +65,7 @@ export class CommentService {
      * @return {string}
      */
     getPostId() {
-        return this.#postId
+        return this.postId
     }
 
     /**
@@ -69,7 +74,7 @@ export class CommentService {
      * @return {string}
      */
     setStatus(status: string) {
-        this.#status = status
+        this.status = status
         return this
     }
 
@@ -78,7 +83,7 @@ export class CommentService {
      * @return {string}
      */
     getStatus() {
-        return this.#status
+        return this.status
     }
 
     /**
@@ -86,7 +91,7 @@ export class CommentService {
      * @return {void}
      */
     async createComment() {
-        await repository
+        await this.interface
             .createComment(this.getId(), this.getPostId(), this.getContent(), this.getStatus())
     }
 
@@ -95,7 +100,7 @@ export class CommentService {
      * @return {object} comments
      */
     async getPostComments() {
-        return await repository
+        return await this.interface
             .findByField("post_id", this.getPostId())
     }
 }

@@ -5,9 +5,10 @@ import {
     MESSEGE_SUCCESS,
     STATUS_OK
 } from "../../constants/data";
-import {CommentService} from "../../services/CommentService";;
+import {CommentService} from "../../services/CommentService";
+import {CommentRepository} from "../../repositories/CommentRepository";
 
-const service = new CommentService()
+const service = new CommentService(new CommentRepository())
 const router = express.Router()
 
 router.get("/posts/:id/comments", [

@@ -1,8 +1,9 @@
 "use strict";
 
 import database from "../config/database";
+import {CommentRepositoryInterface} from "./CommentRepositoryInterface";
 
-export class CommentRepository {
+export class CommentRepository implements CommentRepositoryInterface {
 
     /**
      * Create comment
@@ -12,7 +13,7 @@ export class CommentRepository {
      * @param status
      * @return {void}
      */
-    async createComment(id:number, postId: string, content: string, status: string) {
+    async createComment(id: number, postId: string, content: string, status: string) {
         const createdAt = new Date()
         await database.query('INSERT INTO comments(id, post_id, content, status, created_at) ' +
             'VALUES ($1, $2, $3, $4, $5) '
@@ -26,7 +27,7 @@ export class CommentRepository {
      * @return {object}
      */
     async findByField(field: string, value: string) {
-        const comments = await database .query("SELECT post_id, content, status from comments where "+ field +"=$1",
+        const comments = await database.query("SELECT post_id, content, status from comments where " + field + "=$1",
             [value])
         return comments.rows
     }
