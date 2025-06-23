@@ -6,8 +6,9 @@ import {
     STATUS_OK
 } from "../../constants/data";
 import {PostService} from "../../services/PostService";
+import {PostRepository} from "../../repositories/PostRepository";
 
-const service = new PostService()
+const service = new PostService(new PostRepository())
 const router = express.Router()
 
 router.get("/posts", [

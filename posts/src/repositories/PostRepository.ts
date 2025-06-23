@@ -1,7 +1,9 @@
 "use strict";
 
 import database from "../config/database";
-export class PostRepository {
+import {PostRepositoryInterface} from "./PostRepositoryInterface";
+
+export class PostRepository implements PostRepositoryInterface {
 
     /**
      * create post

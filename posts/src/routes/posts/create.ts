@@ -9,8 +9,9 @@ import {
 } from "../../constants/data";
 import {PostService} from "../../services/PostService";
 import axios from "axios";
+import {PostRepository} from "../../repositories/PostRepository";
 
-const service = new PostService()
+const service = new PostService(new PostRepository())
 const router = express.Router()
 
 router.post("/posts/create", [

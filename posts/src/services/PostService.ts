@@ -1,12 +1,17 @@
 "use strict";
 
-import {PostRepository} from "../repositories/PostRepository";
+import {PostServiceInterface} from "./PostServiceInterface";
+import {PostRepositoryInterface} from "../repositories/PostRepositoryInterface";
 
-const repository = new PostRepository()
+export class PostService implements PostServiceInterface {
+    id: number
+    title: string
 
-export class PostService {
-    #id: number
-    #title: string
+    interface: PostRepositoryInterface;
+
+    constructor(repository: PostRepositoryInterface) {
+        this.interface = repository;
+    }
 
     /**
      * Set post id
@@ -14,7 +19,7 @@ export class PostService {
      * @return {this}
      */
     setId(id: number) {
-        this.#id = id
+        this.id = id
         return this
     }
 
@@ -23,7 +28,7 @@ export class PostService {
      * @return {number}
      */
     getId() {
-        return this.#id
+        return this.id
     }
 
     /**
@@ -32,7 +37,7 @@ export class PostService {
      * @return {string}
      */
     setTitle(title: string) {
-        this.#title = title
+        this.title = title
         return this
     }
 
@@ -41,7 +46,7 @@ export class PostService {
      * @return {string}
      */
     getTitle() {
-        return this.#title
+        return this.title
     }
 
     /**
@@ -49,7 +54,7 @@ export class PostService {
      * @return {void}
      */
     async createPost() {
-        await repository
+        await this.interface
             .createPost(this.getId(), this.getTitle())
     }
 
@@ -58,7 +63,7 @@ export class PostService {
      * @return {object} posts
      */
     async getPosts() {
-        return await repository
+        return await this.interface
             .findAll()
     }
 }
