@@ -2,8 +2,9 @@
 
 import express, {Request, Response} from "express";
 import {QueryService} from "../services/QueryService";
+import {PostRepository} from "../repositories/PostRepository";
 
-const service = new QueryService()
+const service = new QueryService(new PostRepository)
 
 const router = express.Router()
 

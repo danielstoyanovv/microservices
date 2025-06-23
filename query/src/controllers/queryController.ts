@@ -1,8 +1,9 @@
 "use strict";
 
 import {QueryService} from "../services/QueryService"
+import {PostRepository} from "../repositories/PostRepository";
 
-const service = new QueryService
+const service = new QueryService(new PostRepository)
 export const handleEvent = (type: any, data:any) => {
     if (type === "PostCreated") {
         const {id, title} = data

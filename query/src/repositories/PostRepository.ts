@@ -1,7 +1,9 @@
 "use strict";
 
 import database from "../config/database";
-export class PostRepository {
+import {PostRepositoryInterface} from "./PostRepositoryInterface";
+
+export class PostRepository implements PostRepositoryInterface {
 
     /**
      *
@@ -73,7 +75,7 @@ export class PostRepository {
      */
     async findByField(field: string, value: string) {
         const searchData = await database
-            .query("SELECT title, comments, status from posts where to_tsvector("+ field +") @@ to_tsquery('"+ value +"')")
+            .query("SELECT title, comments, status from posts where to_tsvector(" + field + ") @@ to_tsquery('" + value + "')")
         return searchData.rows
     }
 

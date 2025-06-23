@@ -6,8 +6,9 @@ import {
     STATUS_OK,
     MESSEGE_SUCCESS
 } from "../constants/data";
+import {PostRepository} from "../repositories/PostRepository";
 
-const service = new QueryService()
+const service = new QueryService(new PostRepository())
 const router = express.Router()
 router.get("/posts", [
 

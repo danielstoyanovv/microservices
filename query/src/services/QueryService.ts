@@ -1,15 +1,19 @@
 "use strict";
 
-import {PostRepository} from "../repositories/PostRepository";
+import {QueryServiceInterface} from "./QueryServiceInterface";
+import {PostRepositoryInterface} from "../repositories/PostRepositoryInterface";
 
-const repository = new PostRepository()
+export class QueryService implements QueryServiceInterface {
+    id: string
+    title: string
+    content: string
+    commentId: string
+    status: string
+    interface: PostRepositoryInterface;
 
-export class QueryService {
-    #id: string
-    #title: string
-    #content: string
-    #commentId: string
-    #status: string
+    constructor(repository: PostRepositoryInterface) {
+        this.interface = repository;
+    }
 
     /**
      * Set post id
@@ -17,7 +21,7 @@ export class QueryService {
      * @return {this}
      */
     setId(id: string) {
-        this.#id = id
+        this.id = id
         return this
     }
 
@@ -26,7 +30,7 @@ export class QueryService {
      * @return {string}
      */
     getId() {
-        return this.#id
+        return this.id
     }
 
     /**
@@ -35,7 +39,7 @@ export class QueryService {
      * @return {string}
      */
     setTitle(title: string) {
-        this.#title = title
+        this.title = title
         return this
     }
 
@@ -44,7 +48,7 @@ export class QueryService {
      * @return {string}
      */
     getTitle() {
-        return this.#title
+        return this.title
     }
 
     /**
@@ -53,7 +57,7 @@ export class QueryService {
      * @return {string}
      */
     setContent(content: string) {
-        this.#content = content
+        this.content = content
         return this
     }
 
@@ -62,7 +66,7 @@ export class QueryService {
      * @return {string}
      */
     getContent() {
-        return this.#content
+        return this.content
     }
 
     /**
@@ -71,7 +75,7 @@ export class QueryService {
      * @return {this}
      */
     setCommentId(commentId: string) {
-        this.#commentId = commentId
+        this.commentId = commentId
         return this
     }
 
@@ -80,7 +84,7 @@ export class QueryService {
      * @return {string}
      */
     getCommentId() {
-        return this.#commentId
+        return this.commentId
     }
 
     /**
@@ -89,7 +93,7 @@ export class QueryService {
      * @return {string}
      */
     setStatus(status: string) {
-        this.#status = status
+        this.status = status
         return this
     }
 
@@ -98,7 +102,7 @@ export class QueryService {
      * @return {string}
      */
     getStatus() {
-        return this.#status
+        return this.status
     }
 
     /**
@@ -106,7 +110,7 @@ export class QueryService {
      * @return {void}
      */
     async createPost() {
-        await repository
+        await this.interface
             .createPost(Number(this.getId()), this.getTitle(), "", "")
     }
 
@@ -127,7 +131,7 @@ export class QueryService {
      * @return {boolean}
      */
     async handlePostExists(id: string) {
-        return await repository.existsPost(Number(this.getId()))
+        return await this.interface.existsPost(Number(this.getId()))
     }
 
     /**
@@ -138,7 +142,7 @@ export class QueryService {
      */
     async handleCreatePostWithComment(postExists: boolean, comment: string) {
         if (postExists) {
-            const post = await repository
+            const post = await this.interface
                 .findById(Number(this.getId()))
             post.map(async (value: any) => {
                 const currentId = value.id
@@ -146,13 +150,13 @@ export class QueryService {
                 const currentComments = value.comments
                 const currentStatus = value.status
                 const allComments = currentComments + comment
-                await repository
+                await this.interface
                     .deletePost(Number(this.getId()))
-                await repository
+                await this.interface
                     .createPost(Number(currentId), currentTitle, allComments, currentStatus)
             })
         } else {
-            await repository
+            await this.interface
                 .createPost(Number(this.getId()), "", comment, this.getStatus())
         }
     }
@@ -172,7 +176,7 @@ export class QueryService {
      */
     async handleUpdatePostStatus(postExists: boolean) {
         if (postExists) {
-            await repository
+            await this.interface
                 .updatePost(Number(this.getId()), this.getStatus())
         }
     }
@@ -182,7 +186,6 @@ export class QueryService {
      * @return {object} approvedData
      */
     async getApprovedPosts() {
-      return await repository.findByField("status", "approved")
-
+        return await this.interface.findByField("status", "approved")
     }
 }
