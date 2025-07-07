@@ -3,9 +3,7 @@
 import {DatabaseProcessor} from "./databaseProcessor";
 const { Pool } = require('pg');
 require('dotenv').config();
-import {LoggerService} from "./LoggerService";
-
-const logger = new LoggerService().createLogger()
+import {DatabaseConnectionError} from "../errors/database-connection-error";
 
 const DB_NAME = process.env.NODE_ENV === 'test' ? process.env.PG_DB +  "_test" : process.env.PG_DB
 
@@ -18,7 +16,7 @@ export class PostgresProcessor extends DatabaseProcessor {
         const client = await this.getConnectionDriver()
         client
             .query(`CREATE DATABASE ` + DB_NAME)
-            .catch((err: any) => logger.error(err))
+            .catch((err: any) => throw new DatabaseConnectionError(err))
     }
 
     /**
